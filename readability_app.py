@@ -4,8 +4,6 @@ import pandas as pd
 import docx2txt
 import re
 from io import StringIO
-import matplotlib.pyplot as plt
-import seaborn as sns
 
 # === Helper Functions ===
 def count_sentences(text):
@@ -129,20 +127,11 @@ if uploaded_file:
         mime="text/csv"
     )
 
-    # === Feature Importance Chart ===
-    st.subheader("📈 Feature Importance for Readability Classification")
-    st.write("This chart shows which features are most strongly associated with readability difficulty based on early model results.")
+    st.subheader("📋 Feature Importance Table")
+    st.write("This table shows how each feature influenced readability classification in early model testing.")
+    st.write("**Positive values** lean toward harder texts. **Negative values** lean toward easier texts.")
 
-    importance_df = pd.read_csv("embedded_feature_importance.csv", index_col=0)
-
-    fig, ax = plt.subplots(figsize=(10, 6))
-    sns.barplot(
-        x=importance_df["Importance"], 
-        y=importance_df.index,
-        palette="coolwarm", ax=ax
-    )
-    ax.axvline(0, color='black', linestyle='--')
-    ax.set_title("📊 Feature Impact on Readability (Hard vs. Easy)")
-    ax.set_xlabel("Logistic Regression Coefficient")
-    ax.set_ylabel("Feature")
-    st.pyplot(fig)
+    importance_df = pd.read_csv("embedded_feature_importance.csv", index_col=0).reset_index()
+    importance_df.columns = ["Feature", "Coefficient"]
+    importance_df = importance_df.sort_values(by="Coefficient", ascending=False)
+    st.dataframe(importance_df)
