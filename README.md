@@ -1,37 +1,52 @@
+
 # Dyslexia-Friendly Readability Analyzer
 
-**Support every reader. Improve every page.**
+This tool evaluates how accessible a piece of writing is for dyslexic readers using a combination of textual analysis, readability metrics, and sensory engagement measures.
 
-The Dyslexia-Friendly Readability Analyzer is a free and open-source tool created by **Greg Buhrman** for [Howard Forge Press](https://www.howardforgepress.com). It helps writers and educators analyze the readability and accessibility of their content—especially with dyslexic readers in mind.
+## 🧰 Features
 
-## ✨ Features
-- Upload `.docx` or `.txt` files for instant analysis
-- Reports on:
-  - Sentence and word count
+- Upload `.docx` or `.txt` files for analysis
+- Calculates:
+  - Sentence and word counts
   - Average sentence and word length
+  - Average syllables per word
   - Passive voice usage
-  - Lexical variety and rare word usage
-  - Sensory language: sight, sound, touch, smell, taste
-- Downloadable CSV report
+  - Lexical variety and rare/abstract word count
+  - Sensory language counts (sight, sound, touch, smell, taste)
+- Computes a **Dyslexia-Friendly Score** (0–100) based on these metrics
+- Provides a downloadable `.csv` report
+- Includes a **Feature Importance Chart** based on logistic regression analysis
+- Designed to support both writers and educators
 
-## 🛠️ How to Run
-1. Clone this repo or download the files
-2. Make sure you have Python 3.7+ and pip installed
-3. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
-4. Run the app locally with Streamlit:
-```bash
-streamlit run readability_app.py
-```
+## 📈 New Feature: Composite Readability Score
 
-## 🌐 Try It Online
-Visit the hosted version at: *[coming soon]*
+We’ve developed a custom scoring function that weights key features known to affect readability for dyslexic readers. The formula prioritizes:
+- Concise sentences
+- Concrete and sensory-rich vocabulary
+- Low passive voice usage
+- Reduced rare or abstract words
 
-## 📄 License
-MIT License. See `LICENSE` file for details.
+The final score is on a **0–100 scale**, with higher scores indicating more dyslexia-friendly content.
 
----
+## 🔬 Validation Summary
 
-> This project is part of a broader accessibility initiative at [Howard Forge Press](https://www.howardforgepress.com), where we believe that great stories should be for everyone.
+To validate our scoring system:
+1. We analyzed 6 known text samples:
+   - 3 considered **difficult** for dyslexic readers (e.g., Moby Dick)
+   - 3 known to be **accessible** (e.g., Barrington Stoke-style writing)
+2. We computed metrics for each and labeled them “Easy” or “Hard”
+3. We trained a **logistic regression model** to classify difficulty based on those features
+4. Results:
+   - 100% classification accuracy on labeled set
+   - Key features aligned with intuition (sentence length, sensory language, rare word usage)
+5. The **feature importance chart** is included in the app to show which metrics most influence readability
+
+As we collect more feedback and test data, the model will continue to evolve.
+
+## 🔗 Deployment
+
+This app runs on [Streamlit Cloud](https://streamlit.io/cloud) and can be embedded or linked from author websites, educator platforms, or reading support tools.
+
+Created by **Howard Forge Press**  
+🔗 [www.howardforgepress.com](https://www.howardforgepress.com)
+
