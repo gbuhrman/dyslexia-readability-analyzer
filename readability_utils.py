@@ -1,9 +1,8 @@
 
 import re
 import pickle
-from nltk.tokenize import word_tokenize
 
-# Load pre-trained tokenizer from local file
+# Load local sentence tokenizer from file
 with open("tokenizers/punkt/english.pickle", "rb") as f:
     sentence_tokenizer = pickle.load(f)
 
@@ -12,7 +11,7 @@ def count_syllables(word):
 
 def analyze_text(text):
     sentences = sentence_tokenizer.tokenize(text)
-    words = word_tokenize(text)
+    words = re.findall(r'\b\w+\b', text)
     word_count = len(words)
     sentence_count = len(sentences)
     avg_sentence_len = word_count / max(1, sentence_count)
