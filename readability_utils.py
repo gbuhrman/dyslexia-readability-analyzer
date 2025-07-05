@@ -1,19 +1,17 @@
 
 import re
-import nltk
-from nltk.tokenize import sent_tokenize, word_tokenize
+import pickle
+from nltk.tokenize import word_tokenize
 
-# Ensure tokenizers are available
-try:
-    nltk.data.find("tokenizers/punkt")
-except LookupError:
-    nltk.download("punkt")
+# Load pre-trained tokenizer from local file
+with open("tokenizers/punkt/english.pickle", "rb") as f:
+    sentence_tokenizer = pickle.load(f)
 
 def count_syllables(word):
     return len(re.findall(r'[aeiouy]+', word.lower()))
 
 def analyze_text(text):
-    sentences = sent_tokenize(text)
+    sentences = sentence_tokenizer.tokenize(text)
     words = word_tokenize(text)
     word_count = len(words)
     sentence_count = len(sentences)
