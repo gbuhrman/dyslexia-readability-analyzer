@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 import docx2txt
@@ -46,6 +45,17 @@ def count_sensory_words(text):
     sense_counts = {sense: sum(text.lower().count(word) for word in words) for sense, words in senses.items()}
     return sense_counts
 
+def compute_readability_score(avg_sentence_len, avg_word_len, avg_syllables, passive_ratio, sensory_ratio, rare_word_ratio):
+    score = (
+        30 * (1 - min(avg_sentence_len / 20, 1)) +
+        15 * (1 - min(avg_word_len / 8, 1)) +
+        15 * (1 - min(avg_syllables / 3, 1)) +
+        10 * (1 - passive_ratio) +
+        10 * sensory_ratio +
+        20 * (1 - rare_word_ratio)
+    )
+    return round(score, 2)
+
 # === Streamlit UI ===
 st.set_page_config(page_title="Dyslexia-Friendly Readability Analyzer")
 st.title("Dyslexia-Friendly Readability Analyzer")
@@ -58,6 +68,7 @@ Upload a `.docx` or `.txt` file, and this tool will evaluate:
 - Passive voice usage
 - Lexical variety and abstract vocabulary
 - Sensory language (sight, sound, touch, smell, taste)
+- **Overall Dyslexia-Friendly Score** (new!)
 """)
 
 uploaded_file = st.file_uploader("Choose a .docx or .txt file", type=["docx", "txt"])
@@ -74,8 +85,17 @@ if uploaded_file:
     avg_word_len = average_word_length(text)
     avg_syllables = average_syllables_per_word(text)
     passive_count = detect_passive_sentences(text)
+    passive_ratio = passive_count / max(1, sentence_count)
     unique_words, rare_words = lexical_analysis(text)
+    rare_word_ratio = rare_words / max(1, word_count)
     sensory_counts = count_sensory_words(text)
+    sensory_total = sum(sensory_counts.values())
+    sensory_ratio = sensory_total / max(1, word_count)
+
+    readability_score = compute_readability_score(
+        avg_sentence_len, avg_word_len, avg_syllables,
+        passive_ratio, sensory_ratio, rare_word_ratio
+    )
 
     full_analysis = {
         "Sentence Count": sentence_count,
@@ -91,6 +111,7 @@ if uploaded_file:
         "Touch Words": sensory_counts["touch"],
         "Smell Words": sensory_counts["smell"],
         "Taste Words": sensory_counts["taste"],
+        "Dyslexia-Friendly Score (0–100)": readability_score
     }
 
     analysis_df = pd.DataFrame.from_dict(full_analysis, orient='index', columns=["Value"])
