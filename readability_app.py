@@ -131,13 +131,18 @@ if uploaded_file:
 
     # === Feature Importance Chart ===
     st.subheader("📈 Feature Importance for Readability Classification")
-    st.write("This chart shows which features are most strongly associated with readability difficulty.")
+    st.write("This chart shows which features are most strongly associated with readability difficulty based on early model results.")
 
     importance_df = pd.read_csv("embedded_feature_importance.csv", index_col=0)
 
     fig, ax = plt.subplots(figsize=(10, 6))
-    sns.barplot(x=importance_df["Importance"], y=importance_df.index, ax=ax)
-    ax.set_title("Feature Importance: Hard vs. Easy Texts")
+    sns.barplot(
+        x=importance_df["Importance"], 
+        y=importance_df.index,
+        palette="coolwarm", ax=ax
+    )
+    ax.axvline(0, color='black', linestyle='--')
+    ax.set_title("📊 Feature Impact on Readability (Hard vs. Easy)")
     ax.set_xlabel("Logistic Regression Coefficient")
     ax.set_ylabel("Feature")
     st.pyplot(fig)
