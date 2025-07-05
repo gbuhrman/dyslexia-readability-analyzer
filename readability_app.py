@@ -131,7 +131,9 @@ if uploaded_file:
     st.write("This table shows how each feature influenced readability classification in early model testing.")
     st.write("**Positive values** lean toward harder texts. **Negative values** lean toward easier texts.")
 
-    importance_df = pd.read_csv("embedded_feature_importance.csv", index_col=0).reset_index()
+    importance_df = pd.read_csv("embedded_feature_importance.csv")
+    if 'Unnamed: 0' in importance_df.columns:
+        importance_df.rename(columns={"Unnamed: 0": "Feature"}, inplace=True)
+    importance_df = importance_df.sort_values(by="Importance", ascending=False)
     importance_df.columns = ["Feature", "Coefficient"]
-    importance_df = importance_df.sort_values(by="Coefficient", ascending=False)
     st.dataframe(importance_df)
