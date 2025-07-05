@@ -1,12 +1,20 @@
 
 import re
+import nltk
+from nltk.tokenize import sent_tokenize, word_tokenize
+
+# Ensure tokenizers are available
+try:
+    nltk.data.find("tokenizers/punkt")
+except LookupError:
+    nltk.download("punkt")
 
 def count_syllables(word):
     return len(re.findall(r'[aeiouy]+', word.lower()))
 
 def analyze_text(text):
-    sentences = re.split(r'(?<=[.!?]) +', text.strip())
-    words = re.findall(r'\b\w+\b', text)
+    sentences = sent_tokenize(text)
+    words = word_tokenize(text)
     word_count = len(words)
     sentence_count = len(sentences)
     avg_sentence_len = word_count / max(1, sentence_count)
