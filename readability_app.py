@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pandas as pd
 import docx2txt
@@ -68,7 +69,7 @@ Upload a `.docx` or `.txt` file, and this tool will evaluate:
 - Passive voice usage
 - Lexical variety and abstract vocabulary
 - Sensory language (sight, sound, touch, smell, taste)
-- **Overall Dyslexia-Friendly Score** (new!)
+- **Overall Dyslexia-Friendly Score** (0–100)
 """)
 
 uploaded_file = st.file_uploader("Choose a .docx or .txt file", type=["docx", "txt"])
