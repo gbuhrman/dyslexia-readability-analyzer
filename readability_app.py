@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 import docx2txt
@@ -69,7 +68,7 @@ Upload a `.docx` or `.txt` file, and this tool will evaluate:
 - Passive voice usage
 - Lexical variety and abstract vocabulary
 - Sensory language (sight, sound, touch, smell, taste)
-- **Overall Dyslexia-Friendly Score** (0–100)
+- **Overall Dyslexia-Friendly Score** (new!)
 """)
 
 uploaded_file = st.file_uploader("Choose a .docx or .txt file", type=["docx", "txt"])
@@ -126,14 +125,3 @@ if uploaded_file:
         file_name="readability_analysis.csv",
         mime="text/csv"
     )
-
-    st.subheader("📋 Feature Importance Table")
-    st.write("This table shows how each feature influenced readability classification in early model testing.")
-    st.write("**Positive values** lean toward harder texts. **Negative values** lean toward easier texts.")
-
-    importance_df = pd.read_csv("embedded_feature_importance.csv")
-    if 'Unnamed: 0' in importance_df.columns:
-        importance_df.rename(columns={"Unnamed: 0": "Feature"}, inplace=True)
-    importance_df = importance_df.sort_values(by="Importance", ascending=False)
-    importance_df.columns = ["Feature", "Coefficient"]
-    st.dataframe(importance_df)
