@@ -1,52 +1,39 @@
 
-# Dyslexia-Friendly Readability Analyzer
+# Dyslexia-Friendly Chapter Analyzer
 
-This tool evaluates how accessible a piece of writing is for dyslexic readers using a combination of textual analysis, readability metrics, and sensory engagement measures.
+This Streamlit app processes a full novel in `.docx` format, detects chapters automatically, and performs a chapter-by-chapter readability analysis. The output includes sentence complexity, passive voice, sensory language, and a custom Dyslexia-Friendly Score.
 
-## 🧰 Features
-
-- Upload `.docx` or `.txt` files for analysis
+## 🚀 Features
+- Upload a full `.docx` manuscript
+- Automatically splits the text into chapters using common patterns like "Chapter 1", "CHAPTER ONE", etc.
 - Calculates:
-  - Sentence and word counts
-  - Average sentence and word length
-  - Average syllables per word
-  - Passive voice usage
-  - Lexical variety and rare/abstract word count
-  - Sensory language counts (sight, sound, touch, smell, taste)
-- Computes a **Dyslexia-Friendly Score** (0–100) based on these metrics
-- Provides a downloadable `.csv` report
-- Includes a **Feature Importance Chart** based on logistic regression analysis
-- Designed to support both writers and educators
+  - Sentence Count
+  - Word Count
+  - Average Sentence Length
+  - Average Word Length
+  - Average Syllables per Word
+  - Passive Voice Count
+  - Rare/Abstract Word Count
+  - Sensory Word Count
+  - Dyslexia-Friendly Score (0–100)
+- Downloadable chapter metrics as a `.csv` file
 
-## 📈 New Feature: Composite Readability Score
+## 📂 File Upload
+Upload a `.docx` file. The app will extract and analyze each chapter.
 
-We’ve developed a custom scoring function that weights key features known to affect readability for dyslexic readers. The formula prioritizes:
-- Concise sentences
-- Concrete and sensory-rich vocabulary
-- Low passive voice usage
-- Reduced rare or abstract words
+## 📥 Output
+A downloadable `.csv` file is provided with one row per chapter and all relevant readability metrics.
 
-The final score is on a **0–100 scale**, with higher scores indicating more dyslexia-friendly content.
+## 📦 Requirements
+Install dependencies using:
 
-## 🔬 Validation Summary
+```
+pip install -r requirements.txt
+```
 
-To validate our scoring system:
-1. We analyzed 6 known text samples:
-   - 3 considered **difficult** for dyslexic readers (e.g., Moby Dick)
-   - 3 known to be **accessible** (e.g., Barrington Stoke-style writing)
-2. We computed metrics for each and labeled them “Easy” or “Hard”
-3. We trained a **logistic regression model** to classify difficulty based on those features
-4. Results:
-   - 100% classification accuracy on labeled set
-   - Key features aligned with intuition (sentence length, sensory language, rare word usage)
-5. The **feature importance chart** is included in the app to show which metrics most influence readability
+## 🖥 Deployment
+Deploy via [Streamlit Cloud](https://streamlit.io/cloud) by connecting your GitHub repository. Ensure `readability_novel_app.py` is set as the main entry point.
 
-As we collect more feedback and test data, the model will continue to evolve.
+---
 
-## 🔗 Deployment
-
-This app runs on [Streamlit Cloud](https://streamlit.io/cloud) and can be embedded or linked from author websites, educator platforms, or reading support tools.
-
-Created by **Howard Forge Press**  
-🔗 [www.howardforgepress.com](https://www.howardforgepress.com)
-
+Created by [Howard Forge Press](https://www.howardforgepress.com)
