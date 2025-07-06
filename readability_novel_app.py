@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from matplotlib.backends.backend_pdf import PdfPages
 import numpy as np
+from validation_report_generator_wrapped import generate_enhanced_report
 
 def parse_metadata_and_chapters(text):
     metadata = {
@@ -37,7 +38,7 @@ def parse_metadata_and_chapters(text):
 def sanitize(text):
     return text.replace("–", "-").replace("’", "'").replace("“", '"').replace("”", '"')
 
-def generate_validation_report(df, metadata):
+def generate_enhanced_report(df, metadata):
     buffer = BytesIO()
     with PdfPages(buffer) as pdf:
         title = sanitize(metadata.get("Title", "Untitled"))
