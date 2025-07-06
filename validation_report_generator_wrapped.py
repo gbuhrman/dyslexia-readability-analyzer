@@ -28,7 +28,6 @@ def generate_enhanced_report(df, metadata=None, logo_path=None):
     title = metadata.get("Title", "Readability Validation Report") if metadata else "Readability Validation Report"
 
     # Start PDF in memory
-    pdf_buffer = BytesIO()
     pdf = FPDF()
     pdf.add_page()
     pdf.set_font("Arial", 'B', 20)
@@ -114,7 +113,9 @@ def generate_enhanced_report(df, metadata=None, logo_path=None):
     pdf.set_font("Arial", '', 11)
     pdf.multi_cell(0, 8, appendix_text)
 
-    pdf.output(pdf_buffer)
+    pdf_output = pdf.output(dest='S').encode('latin1')
+    pdf_buffer = BytesIO()
+    pdf_buffer.write(pdf_output)
     pdf_buffer.seek(0)
 
     if os.path.exists(heatmap_path):
