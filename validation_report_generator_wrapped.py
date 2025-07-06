@@ -77,6 +77,7 @@ def generate_enhanced_report(df, metadata=None, logo_path=None):
     # Add DF Score trend graph
     plt.figure(figsize=(10, 4))
     plt.plot(df["Chapter"], df["Dyslexia-Friendly Score"], marker='o', linestyle='-')
+    plt.xticks(rotation=90)
     plt.axhline(55, color='green', linestyle='--', label="Dyslexia-Friendly Threshold")
     plt.title("Dyslexia-Friendly Score by Chapter")
     plt.xlabel("Chapter")
