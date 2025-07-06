@@ -28,8 +28,6 @@ if uploaded_file:
         start = lines.index("### START") + 1
         end = lines.index("### END")
         text_lines = lines[start:end]
-        full_text = "
-".join(text_lines)
     except ValueError:
         st.error("Missing ### START or ### END tag.")
         st.stop()
