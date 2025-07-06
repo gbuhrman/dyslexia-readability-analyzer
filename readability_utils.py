@@ -2,13 +2,14 @@
 import re
 import pandas as pd
 import numpy as np
-import nltk.data
+import pickle
 from nltk.tokenize import word_tokenize
 from collections import Counter
 import string
 
-# Load the Punkt tokenizer from a local file (bundled with repo)
-sentence_tokenizer = nltk.data.load("tokenizers/punkt/english.pickle")
+# Load the Punkt tokenizer from a local file using pickle
+with open("tokenizers/punkt/english.pickle", "rb") as f:
+    sentence_tokenizer = pickle.load(f)
 
 def analyze_text(text):
     sentences = sentence_tokenizer.tokenize(text.strip())
