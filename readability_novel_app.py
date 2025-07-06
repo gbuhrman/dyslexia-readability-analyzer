@@ -1,29 +1,44 @@
 
 import streamlit as st
 import pandas as pd
+import re
 from readability_utils import analyze_text
 from validation_report_generator import generate_validation_report
 import os
+import unicodedata
 
 st.set_page_config(page_title="Novel Readability Analyzer", layout="wide")
 st.title("📚 Novel Readability Analyzer")
 
-uploaded_file = st.file_uploader("Upload a .txt file with ### START and ### END metadata", type=["txt"])
+uploaded_file = st.file_uploader("Upload a .txt file with ### METADATA, ### START, and ### END tags", type=["txt"])
 
 if uploaded_file:
-    raw_text = uploaded_file.read().decode("utf-8")
-
-    # Extract metadata
+    raw_text = uploaded_file.read().decode("utf-8", errors="ignore")
     lines = raw_text.splitlines()
+
+    # --- METADATA PARSING ---
     title = "Untitled"
     author = "Unknown"
-    for line in lines:
-        if line.startswith("### Title:"):
-            title = line.split(":", 1)[1].strip()
-        elif line.startswith("### Author:"):
-            author = line.split(":", 1)[1].strip()
+    try:
+        meta_start = lines.index("### METADATA START") + 1
+        meta_end = lines.index("### METADATA END")
+        metadata_lines = lines[meta_start:meta_end]
+        for line in metadata_lines:
+            if line.startswith("### Title:"):
+                title = line.split(":", 1)[1].strip()
+            elif line.startswith("### Author:"):
+                author = line.split(":", 1)[1].strip()
+    except ValueError:
+        st.warning("No metadata block found. Using defaults.")
 
-    # Extract text between ### START and ### END
+    # Normalize to ASCII-safe
+    def safe_ascii(text):
+        return unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode()
+
+    title = safe_ascii(title)
+    author = safe_ascii(author)
+
+    # --- TEXT EXTRACTION ---
     try:
         start = lines.index("### START") + 1
         end = lines.index("### END")
@@ -32,7 +47,7 @@ if uploaded_file:
         st.error("Missing ### START or ### END tag.")
         st.stop()
 
-    # Chapter splitting
+    # --- CHAPTER SPLITTING ---
     chapters = []
     current_chapter = []
     for line in text_lines:
@@ -44,7 +59,7 @@ if uploaded_file:
     if current_chapter:
         chapters.append("\n".join(current_chapter))
 
-    # Run analysis
+    # --- ANALYSIS ---
     st.info(f"Analyzing {len(chapters)} chapters from **{title}** by {author}...")
     all_data = []
     for i, chap in enumerate(chapters):
@@ -63,10 +78,13 @@ if uploaded_file:
 
     st.download_button("📥 Download Chapter Analysis CSV", data=df.to_csv(index=False), file_name=csv_path)
 
-    # Generate validation report
+    # --- VALIDATION REPORT ---
     st.subheader("📄 Generate Full Validation Report")
     if st.button("Generate PDF Report"):
         report_path = "validation_report.pdf"
-        generate_validation_report(csv_path, title=title, output_path=report_path)
-        with open(report_path, "rb") as f:
-            st.download_button("📄 Download Validation Report", f, file_name="Validation_Report.pdf", mime="application/pdf")
+        try:
+            generate_validation_report(csv_path, title=title, output_path=report_path)
+            with open(report_path, "rb") as f:
+                st.download_button("📄 Download Validation Report", f, file_name="Validation_Report.pdf", mime="application/pdf")
+        except Exception as e:
+            st.error(f"Report generation failed: {e}")
