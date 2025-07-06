@@ -38,7 +38,7 @@ def parse_metadata_and_chapters(text):
 def sanitize(text):
     return text.replace("–", "-").replace("’", "'").replace("“", '"').replace("”", '"')
 
-def generate_enhanced_report(df, metadata):
+def generate_validation_report(df, metadata):
     buffer = BytesIO()
     with PdfPages(buffer) as pdf:
         title = sanitize(metadata.get("Title", "Untitled"))
@@ -160,7 +160,7 @@ if uploaded_file:
         csv = df.to_csv(index=False).encode("utf-8")
         st.download_button("📥 Download Chapter Analysis (.csv)", csv, "chapter_readability_analysis.csv", "text/csv")
 
-        pdf_buffer = generate_validation_report(df, metadata)
+        pdf_buffer = generate_enhanced_report(df, metadata)
         st.download_button("📘 Download Validation Report (.pdf)", data=pdf_buffer,
                            file_name=f"{metadata['Title'].replace(' ', '_')}_Validation_Report.pdf",
                            mime="application/pdf")
