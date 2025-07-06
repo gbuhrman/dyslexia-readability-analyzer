@@ -1,5 +1,7 @@
 streamlit
 pandas
-docx2txt
-xlsxwriter
+matplotlib
+seaborn
+numpy
 nltk
+python-docx
