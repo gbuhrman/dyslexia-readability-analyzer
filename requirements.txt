@@ -1,8 +1,7 @@
-fpdf==1.7.2
+streamlit
 pandas
+numpy
 matplotlib
 seaborn
-numpy
-nltk
-streamlit
+fpdf
 python-docx

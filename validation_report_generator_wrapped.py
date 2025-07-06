@@ -23,16 +23,13 @@ def sanitize_text(text):
 def generate_enhanced_report(df, metadata=None, logo_path=None):
     feature_cols = df.columns.drop("Chapter")
 
-    # Compute z-scores
     z_scores = df[feature_cols].apply(lambda x: (x - x.mean()) / x.std())
     z_scores["Chapter"] = df["Chapter"]
 
-    # Detect outliers
     outliers = z_scores[feature_cols].abs() > 2
     outlier_rows = z_scores[outliers.any(axis=1)]
     outlier_data = df.loc[outlier_rows.index]
 
-    # Summary info
     lowest = df.loc[df["Dyslexia-Friendly Score"].idxmin()]
     highest = df.loc[df["Dyslexia-Friendly Score"].idxmax()]
     avg_score = df["Dyslexia-Friendly Score"].mean()
@@ -77,6 +74,26 @@ def generate_enhanced_report(df, metadata=None, logo_path=None):
         f"Strong performance in {df.drop(columns=['Chapter']).iloc[highest.name].idxmax()} helped readability.")
     pdf.multi_cell(0, 8, sanitize_text(highest_text))
 
+    # Add DF Score trend graph
+    plt.figure(figsize=(10, 4))
+    plt.plot(df["Chapter"], df["Dyslexia-Friendly Score"], marker='o', linestyle='-')
+    plt.axhline(55, color='green', linestyle='--', label="Dyslexia-Friendly Threshold")
+    plt.title("Dyslexia-Friendly Score by Chapter")
+    plt.xlabel("Chapter")
+    plt.ylabel("Score")
+    plt.grid(True)
+    plt.legend()
+    trend_path = "df_trend_temp.png"
+    plt.tight_layout()
+    plt.savefig(trend_path)
+    plt.close()
+
+    pdf.add_page()
+    pdf.set_font("Arial", 'B', 16)
+    pdf.cell(0, 10, sanitize_text("Dyslexia-Friendly Score Trend"), ln=True)
+    pdf.image(trend_path, x=10, y=25, w=180)
+
+    # Z-Score Heatmap
     plt.figure(figsize=(10, 4))
     sns.heatmap(z_scores.set_index("Chapter").transpose(), cmap="coolwarm", center=0, cbar_kws={'label': 'Z-score'})
     plt.title("Z-Score Heatmap")
@@ -130,7 +147,8 @@ def generate_enhanced_report(df, metadata=None, logo_path=None):
     pdf_buffer.write(pdf_output)
     pdf_buffer.seek(0)
 
-    if os.path.exists(heatmap_path):
-        os.remove(heatmap_path)
+    for path in [trend_path, heatmap_path]:
+        if os.path.exists(path):
+            os.remove(path)
 
     return pdf_buffer
