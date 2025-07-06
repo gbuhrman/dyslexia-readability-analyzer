@@ -4,10 +4,9 @@ import pandas as pd
 import numpy as np
 import pickle
 from nltk.tokenize import word_tokenize
-from collections import Counter
 import string
 
-# Load the Punkt tokenizer from a local file using pickle
+# Load the Punkt sentence tokenizer from bundled file
 with open("tokenizers/punkt/english.pickle", "rb") as f:
     sentence_tokenizer = pickle.load(f)
 
