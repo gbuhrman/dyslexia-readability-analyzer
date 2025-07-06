@@ -1,39 +1,54 @@
 
-# Dyslexia-Friendly Chapter Analyzer
+# Dyslexia-Friendly Validation Report Generator
 
-This Streamlit app processes a full novel in `.docx` format, detects chapters automatically, and performs a chapter-by-chapter readability analysis. The output includes sentence complexity, passive voice, sensory language, and a custom Dyslexia-Friendly Score.
+This tool creates enhanced Dyslexia-Friendly Validation Reports from chapter-level readability data. Reports are formatted as multi-page PDFs including:
 
-## 🚀 Features
-- Upload a full `.docx` manuscript
-- Automatically splits the text into chapters using common patterns like "Chapter 1", "CHAPTER ONE", etc.
-- Calculates:
-  - Sentence Count
-  - Word Count
-  - Average Sentence Length
-  - Average Word Length
-  - Average Syllables per Word
-  - Passive Voice Count
-  - Rare/Abstract Word Count
-  - Sensory Word Count
-  - Dyslexia-Friendly Score (0–100)
-- Downloadable chapter metrics as a `.csv` file
+- Title page with average readability score
+- Z-score heatmap of key features by chapter
+- Paginated Outlier Tables with styled formatting
+- Chapter-specific narrative insights
+- Full Feature Explanation Appendix
 
-## 📂 File Upload
-Upload a `.docx` file. The app will extract and analyze each chapter.
+## 🔧 How It Works
 
-## 📥 Output
-A downloadable `.csv` file is provided with one row per chapter and all relevant readability metrics.
+This module assumes you have a `.csv` file exported from the Dyslexia Readability Analyzer containing chapter-level metrics.
+
+### Required Columns
+- Chapter
+- Sentence Count
+- Word Count
+- Avg Sentence Length
+- Avg Word Length
+- Avg Syllables per Word
+- Passive Sentences
+- Rare/Abstract Words
+- Sensory Words
+- Dyslexia-Friendly Score
+
+### How to Use
+
+1. Place your input CSV file into the project directory.
+2. Run the `validation_report_generator.py` script.
+3. Your PDF will be saved in the output directory.
+
+### Run from Streamlit
+This script is compatible with Streamlit apps. You can import it into your `readability_novel_app.py` and call it after analysis.
+
+```python
+from validation_report_generator import generate_validation_report
+generate_validation_report("chapter_readability_analysis.csv", "Your_Title_Here")
+```
 
 ## 📦 Requirements
-Install dependencies using:
 
-```
-pip install -r requirements.txt
-```
+All required packages are listed in `requirements.txt` and include:
+- pandas
+- matplotlib
+- seaborn
+- numpy
+- nltk
+- fpdf
+- streamlit
 
-## 🖥 Deployment
-Deploy via [Streamlit Cloud](https://streamlit.io/cloud) by connecting your GitHub repository. Ensure `readability_novel_app.py` is set as the main entry point.
-
----
-
-Created by [Howard Forge Press](https://www.howardforgepress.com)
+## 🏷️ License
+This project is open source under the MIT License. Created by Howard Forge Press.
